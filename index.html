@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Plant Monitoring</title>
+
+        <style>
+
+        /* Global */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            padding-bottom: 75px;
+
+            width: 100%;
+            min-height: 100vh;
+
+            font-family: Arial, sans-serif;
+
+            background: #f1ecec;
+            color: #222;
+
+            transition: 0.3s;
+
+            overflow-x: hidden;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+
+        /* Dark Mode */
+
+        .dark {
+            background: #1e1e1e;
+            color: white;
+        }
+
+
+        /* Home */
+
+        .home {
+            width: 100%;
+            min-height: calc(100vh - 75px);
+
+            display: flex;
+            flex-direction: column;
+
+            justify-content: center;
+            align-items: center;
+
+            text-align: center;
+
+            padding: 20px;
+        }
+
+        .logo-circle {
+            width: clamp(80px, 20vw, 110px);
+            height: clamp(80px, 20vw, 110px);
+
+            border-radius: 50%;
+
+            background: #7b6ba8;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: clamp(30px, 8vw, 45px);
+
+            color: white;
+
+            flex-shrink: 0;
+        }
+
+        .home-title {
+            margin: 15px 0 5px;
+
+            font-size: clamp(26px, 6vw, 34px);
+
+            color: #7b6ba8;
+        }
+
+        .home p {
+            margin: 5px 0;
+
+            font-size: clamp(14px, 3.5vw, 18px);
+        }
+
+
+        .navContainer {
+            position: fixed;
+
+            bottom: 0;
+            left: 0;
+
+            width: 100%;
+
+            min-height: 60px;
+
+            background: powderblue;
+
+            display: flex;
+
+            justify-content: space-around;
+            align-items: center;
+
+            padding: 5px;
+
+            z-index: 1000;
+
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-btn {
+            border: none;
+
+            background: none;
+
+            font-weight: bold;
+
+            font-size: clamp(10px, 2.8vw, 16px);
+
+            cursor: pointer;
+
+            padding: 8px 5px;
+
+            white-space: nowrap;
+
+            color: #222;
+
+            min-width: 0;
+        }
+
+        .dark .nav-btn {
+            color: #222;
+        }
+
+        #addNotes {
+            width: clamp(55px, 15vw, 70px);
+            height: clamp(55px, 15vw, 70px);
+
+            border-radius: 50%;
+
+            font-size: clamp(24px, 7vw, 30px);
+
+            background: powderblue;
+
+            border: none;
+
+            color: red;
+
+            position: relative;
+
+            bottom: 15px;
+
+            cursor: pointer;
+
+            flex-shrink: 0;
+
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+
+
+        .view-box {
+            display: none;
+
+            background: white;
+
+            width: calc(100% - 20px);
+
+            max-width: 900px;
+
+            margin: 10px auto;
+
+            padding: clamp(12px, 4vw, 20px);
+
+            border-radius: 10px;
+
+            overflow: hidden;
+
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .dark .view-box {
+            background: #2c2c2c;
+        }
+
+
+
+        input {
+            width: 100%;
+
+            max-width: 400px;
+
+            padding: 12px;
+
+            margin: 10px auto;
+
+            display: block;
+
+            font-size: 16px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 6px;
+
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #7b6ba8;
+        }
+
+        .compute {
+            width: 100%;
+
+            max-width: 400px;
+
+            padding: 12px;
+
+            background: powderblue;
+
+            color: red;
+
+            border: none;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            display: block;
+
+            margin: 10px auto;
+
+            font-size: 16px;
+        }
+
+        .compute:hover {
+            opacity: 0.85;
+        }
+
+
+
+        #notesTable {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            table-layout: fixed;
+        }
+
+        #notesTable th,
+        #notesTable td {
+            border: 1px solid #ccc;
+
+            padding: 8px;
+
+            text-align: center;
+
+            word-wrap: break-word;
+
+            overflow-wrap: break-word;
+        }
+
+        #notesTable th {
+            background: #f3f4ff;
+        }
+
+        .dark #notesTable th {
+            background: #444;
+        }
+
+        #notesTable button {
+            border: none;
+
+            background: none;
+
+            cursor: pointer;
+
+            font-size: 16px;
+        }
+
+
+        .settings-box {
+            background: white;
+
+            width: calc(100% - 20px);
+
+            max-width: 900px;
+
+            margin: 10px auto;
+
+            padding: clamp(12px, 4vw, 20px);
+
+            border-radius: 12px;
+
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .dark .settings-box {
+            background: #2c2c2c;
+        }
+
+        .setting-section {
+            margin-bottom: 15px;
+        }
+
+        .setting-title {
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+            font-size: clamp(15px, 4vw, 18px);
+        }
+
+        .setting-item {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            padding: 10px 0;
+
+            border-bottom: 1px solid #ddd;
+        }
+
+        .setting-item:last-child {
+            border: none;
+        }
+
+        .setting-item span {
+            overflow-wrap: anywhere;
+        }
+
+        .edit-btn {
+            background: none;
+
+            border: none;
+
+            font-size: 18px;
+
+            cursor: pointer;
+
+            flex-shrink: 0;
+        }
+
+
+        .switch {
+            width: 45px;
+
+            height: 24px;
+
+            background: #ccc;
+
+            border-radius: 15px;
+
+            position: relative;
+
+            cursor: pointer;
+
+            flex-shrink: 0;
+        }
+
+        .switch span {
+            width: 20px;
+
+            height: 20px;
+
+            background: white;
+
+            position: absolute;
+
+            top: 2px;
+
+            left: 2px;
+
+            border-radius: 50%;
+
+            transition: 0.3s;
+        }
+
+        .switch.active {
+            background: #6fbf73;
+        }
+
+        .switch.active span {
+            left: 23px;
+        }
+
+
+        /* Calendar Header */
+
+        .calendar-header {
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            gap: clamp(8px, 3vw, 15px);
+
+            background: #7b6ba8;
+
+            color: white;
+
+            padding: 12px;
+
+            border-radius: 10px 10px 0 0;
+
+            font-size: clamp(14px, 4vw, 18px);
+        }
+
+        .calendar-header button {
+            background: rgba(255, 255, 255, 0.3);
+
+            border: none;
+
+            color: white;
+
+            font-size: clamp(15px, 5vw, 18px);
+
+            padding: 5px 10px;
+
+            border-radius: 50%;
+
+            cursor: pointer;
+        }
+
+
+        /* Calendar */
+
+        .calendar {
+            background: white;
+
+            border-radius: 10px;
+
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+
+            overflow: hidden;
+
+            width: 100%;
+        }
+
+        .weekdays,
+        .days {
+            display: grid;
+
+            grid-template-columns: repeat(7, 1fr);
+
+            width: 100%;
+        }
+
+        .weekdays div {
+            padding: clamp(5px, 2vw, 8px);
+
+            text-align: center;
+
+            background: #f3f4ff;
+
+            font-weight: bold;
+
+            font-size: clamp(11px, 3vw, 15px);
+        }
+
+        .days div {
+            aspect-ratio: 1 / 1;
+
+            min-height: 30px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            cursor: pointer;
+
+            border-radius: 50%;
+
+            margin: clamp(2px, 1vw, 4px);
+
+            font-size: clamp(11px, 3vw, 16px);
+        }
+
+        .days div:hover {
+            background: #ddd;
+        }
+
+        .today {
+            background: #2196F3;
+
+            color: white;
+
+            font-weight: bold;
+        }
+
+
+
+        .calendar-today {
+            background: #ffffff;
+
+            margin-top: 10px;
+
+            padding: clamp(10px, 3vw, 15px);
+
+            border-radius: 10px;
+
+            text-align: center;
+
+            font-family: Arial, sans-serif;
+
+            color: #333;
+
+            box-shadow: 1px 1px 23px -6px rgba(0, 0, 0, 0.66);
+        }
+
+        .dark .calendar-today {
+            background: #2c2c2c;
+
+            color: white;
+        }
+
+        .calendar-today p {
+            margin: 5px 0;
+
+            font-size: clamp(13px, 3.5vw, 16px);
+        }
+
+
+        @media (max-width: 480px) {
+
+            body {
+                padding-bottom: 70px;
+            }
+
+            .navContainer {
+                min-height: 60px;
+
+                padding: 3px;
+            }
+
+            .nav-btn {
+                font-size: 10px;
+
+                padding: 5px 2px;
+            }
+
+            #addNotes {
+                bottom: 12px;
+            }
+
+            .view-box {
+                width: calc(100% - 12px);
+
+                margin: 6px auto;
+
+                padding: 12px;
+            }
+
+            .settings-box {
+                width: calc(100% - 12px);
+
+                margin: 6px auto;
+
+                padding: 12px;
+            }
+
+            .setting-item {
+                gap: 8px;
+            }
+
+            #notesTable th,
+            #notesTable td {
+                padding: 5px;
+
+                font-size: 12px;
+            }
+
+            .days div {
+                margin: 2px;
+
+                font-size: 12px;
+            }
+
+            .calendar-header {
+                padding: 10px;
+            }
+
+            .calendar-header button {
+                padding: 4px 8px;
+            }
+        }
+
+
+
+        @media (max-width: 350px) {
+
+            .nav-btn {
+                font-size: 9px;
+            }
+
+            #addNotes {
+                width: 50px;
+
+                height: 50px;
+
+                font-size: 22px;
+
+                bottom: 10px;
+            }
+
+            .home {
+                padding: 10px;
+            }
+
+            .view-box {
+                width: calc(100% - 8px);
+
+                padding: 8px;
+            }
+
+            .settings-box {
+                width: calc(100% - 8px);
+
+                padding: 8px;
+            }
+
+            #notesTable th,
+            #notesTable td {
+                padding: 4px;
+
+                font-size: 10px;
+            }
+        }
+
+
+
+        @media (min-width: 481px) and (max-width: 1024px) {
+
+            .view-box,
+            .settings-box {
+                width: 90%;
+            }
+
+            .home-title {
+                font-size: 38px;
+            }
+        }
+
+
+        @media (min-width: 1025px) {
+
+            .view-box,
+            .settings-box {
+                width: 80%;
+
+                max-width: 900px;
+            }
+
+            .nav-btn {
+                font-size: 16px;
+            }
+        }
+
+    </style>
+    </head>
+
+    <body>
+
+        <!-- Home View -->
+
+        <div id="homeView" class="home">
+
+            <div class="logo-circle">
+                🌱
+            </div>
+
+            <h1 class="home-title">
+                Heinics
+            </h1>
+
+            <p>
+                Planting Companion App
+            </p>
+
+        </div>
+
+        <!-- Calendar -->
+
+        <div id="calendarView" class="view-box">
+
+            <div class="calendar-header">
+
+                <button onclick="prevMonth()">
+                    ◀
+                </button>
+
+                <span id="monthYear"></span>
+
+                <button onclick="nextMonth()">
+                    ▶
+                </button>
+
+            </div>
+
+            <div class="calendar">
+
+                <div class="weekdays">
+
+                    <div>S</div>
+                    <div>M</div>
+                    <div>T</div>
+                    <div>W</div>
+                    <div>T</div>
+                    <div>F</div>
+                    <div>S</div>
+
+                </div>
+
+                <div
+                    class="days"
+                    id="calendarDays">
+                </div>
+
+            </div>
+
+            <div
+                class="calendar-today"
+                id="calendarToday">
+
+                <p>
+                    🌿 <b>Today</b>
+                </p>
+
+                <p id="todayDate"></p>
+
+                <p id="todayQuote">
+                    🌻 Keep growing strong.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- Plant Notes -->
+
+        <div id="notesView" class="view-box">
+
+            <h3>
+                📝 Plant Notes
+            </h3>
+
+            <input
+                type="date"
+                id="noteDate">
+
+            <input
+                type="text"
+                id="plantName"
+                placeholder="Plant name">
+
+            <button
+                class="compute"
+                onclick="addNote()">
+
+                Add Note
+
+            </button>
+
+            <table id="notesTable">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Plant
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody></tbody>
+
+            </table>
+
+        </div>
+
+        <!-- Calculator -->
+
+        <div id="calculatorView" class="view-box">
+
+            <h3>
+                🧪 Nutrient Calculator
+            </h3>
+
+            <input
+                type="number"
+                id="liters"
+                placeholder="Enter liters">
+
+            <button
+                class="compute"
+                onclick="compute()">
+
+                Compute
+
+            </button>
+
+            <p id="result"></p>
+
+        </div>
+
+        <!-- Settings -->
+
+        <div id="settingsView">
+
+            <div class="settings-box">
+
+                <!-- PROFILE -->
+
+                <div class="setting-section">
+
+                    <div class="setting-title">
+                        👤 Profile
+                    </div>
+
+                    <div class="setting-item">
+
+                        <span>
+                            Name:
+                            <b id="displayName">
+                                Not set
+                            </b>
+                        </span>
+
+                        <button
+                            class="edit-btn"
+                            onclick="editName()">
+
+                            ✏️
+
+                        </button>
+
+                    </div>
+
+                    <div class="setting-item">
+
+                        <span>
+                            Favorite Plant:
+                            <b id="displayPlant">
+                                Not set
+                            </b>
+                        </span>
+
+                        <button
+                            class="edit-btn"
+                            onclick="editPlant()">
+
+                            ✏️
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- APPEARANCE -->
+
+                <div class="setting-section">
+
+                    <div class="setting-title">
+                        🌙 Appearance
+                    </div>
+
+                    <div class="setting-item">
+
+                        <span>
+                            Dark Mode
+                        </span>
+
+                        <div
+                            class="switch"
+                            id="darkSwitch"
+                            onclick="toggleDark()">
+
+                            <span></span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- NOTIFICATIONS -->
+
+                <div class="setting-section">
+
+                    <div class="setting-title">
+                        🔔 Notifications
+                    </div>
+
+                    <div class="setting-item">
+
+                        <span>
+                            Water Reminder
+                        </span>
+
+                        <div class="switch active">
+
+                            <span></span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- DATA -->
+
+                <div class="setting-section">
+
+                    <div class="setting-title">
+                        💾 Data & Storage
+                    </div>
+
+                    <div class="setting-item">
+
+                        <span>
+                            Backup Notes
+                        </span>
+
+                        <button onclick="backup()">
+                            ➤
+                        </button>
+
+                    </div>
+
+                    <div class="setting-item">
+
+                        <span style="color:red">
+                            Clear All Notes
+                        </span>
+
+                        <button onclick="clearAll()">
+                            🗑️
+                        </button>
+
+                    </div>
+
+                </div>
+
+                <!-- ABOUT -->
+
+                <div class="setting-section">
+
+                    <div class="setting-title">
+                        ℹ️ About
+                    </div>
+
+                    <div class="setting-item">
+
+                        <span>
+                            Developer
+                        </span>
+
+                        <span>
+                            Ilyer Jhon Tapiz
+                            <br>
+                            Josie Tindaan
+                        </span>
+
+                    </div>
+
+                    <div class="setting-item">
+
+                        <span>
+                            Version
+                        </span>
+
+                        <span>
+                            1.0
+                        </span>
+
+                    </div>
+
+                    <div class="setting-item">
+
+                        <span>
+                            Made In
+                        </span>
+
+                        <span>
+                            Philippines 🇵🇭
+                        </span>
+
+                    </div>
+
+                    <div class="setting-item">
+
+                        <span>
+                            Email
+                        </span>
+
+                        <span style="color:red">
+
+                            jan925077@gmail.com
+                            <br>
+                            josietindaan718@gmail
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Navigation-->
+
+        <footer>
+
+            <div class="navContainer">
+
+                <button
+                    class="nav-btn"
+                    onclick="showHome()">
+
+                    Home
+
+                </button>
+
+                <button
+                    class="nav-btn"
+                    onclick="showCalendar()">
+
+                    Calendar
+
+                </button>
+
+                <button
+                    id="addNotes"
+                    onclick="showNotes()">
+
+                    +
+
+                </button>
+
+                <button
+                    class="nav-btn"
+                    onclick="showCalculator()">
+
+                    Calculator
+
+                </button>
+
+                <button
+                    class="nav-btn"
+                    onclick="showSettings()">
+
+                    Setting
+
+                </button>
+
+            </div>
+
+        </footer>
+
+        <script>
+
+
+
+        const homeView =
+            document.getElementById("homeView");
+
+        const notesView =
+            document.getElementById("notesView");
+
+        const calculatorView =
+            document.getElementById("calculatorView");
+
+        const settingsView =
+            document.getElementById("settingsView");
+
+
+        /* Data */
+
+        let notes =
+            JSON.parse(
+                localStorage.getItem("plantNotes")
+            ) || [];
+
+
+        let currentDate = new Date();
+
+
+        /* VIEW CONTROL */
+
+        function hideAll() {
+
+            homeView.style.display = "none";
+
+            notesView.style.display = "none";
+
+            calculatorView.style.display = "none";
+
+            settingsView.style.display = "none";
+
+            document
+                .getElementById("calendarView")
+                .style.display = "none";
+        }
+
+
+        function showHome() {
+
+            hideAll();
+
+            homeView.style.display = "flex";
+        }
+
+
+        function showNotes() {
+
+            hideAll();
+
+            notesView.style.display = "block";
+
+            renderNotes();
+        }
+
+
+        /* Calendar */
+
+        function renderCalendar() {
+
+            const y =
+                currentDate.getFullYear();
+
+            const m =
+                currentDate.getMonth();
+
+
+            const today =
+                new Date();
+
+
+            const firstDay =
+                new Date(y, m, 1).getDay();
+
+
+            const totalDays =
+                new Date(y, m + 1, 0).getDate();
+
+
+            document
+                .getElementById("monthYear")
+                .innerText =
+                currentDate.toLocaleString(
+                    "default",
+                    {
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+
+
+            const daysBox =
+                document.getElementById(
+                    "calendarDays"
+                );
+
+
+            daysBox.innerHTML = "";
+
+
+            /* EMPTY CELLS */
+
+            for (
+                let i = 0;
+                i < firstDay;
+                i++
+            ) {
+
+                daysBox.innerHTML +=
+                    "<div></div>";
+            }
+
+
+            /* DAYS */
+
+            for (
+                let d = 1;
+                d <= totalDays;
+                d++
+            ) {
+
+                const div =
+                    document.createElement("div");
+
+
+                div.innerText = d;
+
+
+                /* TODAY */
+
+                if (
+                    d === today.getDate() &&
+                    m === today.getMonth() &&
+                    y === today.getFullYear()
+                ) {
+
+                    div.classList.add("today");
+                }
+
+
+                daysBox.appendChild(div);
+            }
+
+
+            /* TODAY SECTION */
+
+            const todayDate =
+                new Date();
+
+
+            document
+                .getElementById("todayDate")
+                .innerText =
+                todayDate.toLocaleDateString(
+                    "en-US",
+                    {
+                        weekday: "long",
+                        month: "long",
+                        day: "numeric",
+                        year: "numeric"
+                    }
+                );
+        }
+
+
+        function prevMonth() {
+
+            currentDate.setMonth(
+                currentDate.getMonth() - 1
+            );
+
+            renderCalendar();
+        }
+
+
+        function nextMonth() {
+
+            currentDate.setMonth(
+                currentDate.getMonth() + 1
+            );
+
+            renderCalendar();
+        }
+
+
+        function showCalendar() {
+
+            hideAll();
+
+            document
+                .getElementById("calendarView")
+                .style.display = "block";
+
+            renderCalendar();
+        }
+
+
+        /* Calculator */
+
+        function showCalculator() {
+
+            hideAll();
+
+            calculatorView.style.display =
+                "block";
+        }
+
+
+        function compute() {
+
+            let l =
+                parseFloat(
+                    document.getElementById(
+                        "liters"
+                    ).value
+                );
+
+
+            let r =
+                document.getElementById(
+                    "result"
+                );
+
+
+            if (isNaN(l)) {
+
+                r.innerText =
+                    "Invalid";
+
+                return;
+            }
+
+
+            const crop =
+                l * (12 / 15.14);
+
+            const cal =
+                l * (10 / 15.14);
+
+            const eps =
+                l * (5 / 15.14);
+
+
+            r.innerHTML =
+                `Crop: ${crop.toFixed(2)}g<br>
+                 Calcium: ${cal.toFixed(2)}g<br>
+                 Epsom: ${eps.toFixed(2)}g`;
+        }
+
+
+        /* Settings */
+
+        function showSettings() {
+
+            hideAll();
+
+            settingsView.style.display =
+                "block";
+
+            loadProfile();
+        }
+
+
+        /* Plant Note*/
+
+        function addNote() {
+
+            let date =
+                document.getElementById(
+                    "noteDate"
+                ).value;
+
+
+            let plant =
+                document.getElementById(
+                    "plantName"
+                ).value;
+
+
+            if (!date || !plant) {
+
+                return alert(
+                    "Fill all fields"
+                );
+            }
+
+
+            notes.push({
+                date,
+                plant
+            });
+
+
+            localStorage.setItem(
+                "plantNotes",
+                JSON.stringify(notes)
+            );
+
+
+            renderNotes();
+
+
+            /* CLEAR INPUTS */
+
+            document.getElementById(
+                "noteDate"
+            ).value = "";
+
+
+            document.getElementById(
+                "plantName"
+            ).value = "";
+        }
+
+
+        function renderNotes() {
+
+            let tbody =
+                document.querySelector(
+                    "#notesTable tbody"
+                );
+
+
+            tbody.innerHTML = "";
+
+
+            notes.forEach((n, i) => {
+
+                tbody.innerHTML += `
+
+                    <tr>
+
+                        <td>
+                            ${n.date}
+                        </td>
+
+                        <td>
+                            ${n.plant}
+                        </td>
+
+                        <td>
+                            <button
+                                onclick="deleteNote(${i})">
+                                ❌
+                            </button>
+                        </td>
+
+                    </tr>
+
+                `;
+
+            });
+        }
+
+
+        function deleteNote(i) {
+
+            notes.splice(i, 1);
+
+
+            localStorage.setItem(
+                "plantNotes",
+                JSON.stringify(notes)
+            );
+
+
+            renderNotes();
+        }
+
+
+        /* Dark Mode */
+
+        function toggleDark() {
+
+            document.body.classList.toggle(
+                "dark"
+            );
+
+
+            document
+                .getElementById("darkSwitch")
+                .classList.toggle("active");
+        }
+
+
+        /* Profile */
+
+        function editName() {
+
+            let name =
+                prompt(
+                    "Enter your name"
+                );
+
+
+            if (name) {
+
+                localStorage.setItem(
+                    "userName",
+                    name
+                );
+
+
+                loadProfile();
+            }
+        }
+
+
+        function editPlant() {
+
+            let plant =
+                prompt(
+                    "Enter favorite plant"
+                );
+
+
+            if (plant) {
+
+                localStorage.setItem(
+                    "favPlant",
+                    plant
+                );
+
+
+                loadProfile();
+            }
+        }
+
+
+        function loadProfile() {
+
+            let name =
+                localStorage.getItem(
+                    "userName"
+                ) || "Not set";
+
+
+            let plant =
+                localStorage.getItem(
+                    "favPlant"
+                ) || "Not set";
+
+
+            document
+                .getElementById("displayName")
+                .innerText = name;
+
+
+            document
+                .getElementById("displayPlant")
+                .innerText = plant;
+        }
+
+
+        /* DATA */
+
+        function clearAll() {
+
+            if (
+                confirm(
+                    "Delete all notes?"
+                )
+            ) {
+
+                notes = [];
+
+
+                localStorage.removeItem(
+                    "plantNotes"
+                );
+
+
+                renderNotes();
+            }
+        }
+
+
+        function backup() {
+
+            alert(
+                "Backup Saved (Demo)"
+            );
+        }
+
+
+        showHome();
+
+    </script>
+
+    </body>
+
+</html>
