@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
     <head>
         <meta charset="UTF-8">
@@ -10,7 +10,6 @@
 
         <style>
 
-        /* Global */
 
         * {
             box-sizing: border-box;
@@ -45,15 +44,11 @@
         }
 
 
-        /* Dark Mode */
-
         .dark {
             background: #1e1e1e;
             color: white;
         }
 
-
-        /* Home */
 
         .home {
             width: 100%;
@@ -447,9 +442,6 @@
             cursor: pointer;
         }
 
-
-        /* Calendar */
-
         .calendar {
             background: white;
 
@@ -688,8 +680,6 @@
 
     <body>
 
-        <!-- Home View -->
-
         <div id="homeView" class="home">
 
             <div class="logo-circle">
@@ -705,8 +695,6 @@
             </p>
 
         </div>
-
-        <!-- Calendar -->
 
         <div id="calendarView" class="view-box">
 
@@ -763,8 +751,6 @@
 
         </div>
 
-        <!-- Plant Notes -->
-
         <div id="notesView" class="view-box">
 
             <h3>
@@ -816,8 +802,6 @@
 
         </div>
 
-        <!-- Calculator -->
-
         <div id="calculatorView" class="view-box">
 
             <h3>
@@ -840,8 +824,6 @@
             <p id="result"></p>
 
         </div>
-
-        <!-- Settings -->
 
         <div id="settingsView">
 
@@ -895,8 +877,6 @@
 
                 </div>
 
-                <!-- APPEARANCE -->
-
                 <div class="setting-section">
 
                     <div class="setting-title">
@@ -922,8 +902,6 @@
 
                 </div>
 
-                <!-- NOTIFICATIONS -->
-
                 <div class="setting-section">
 
                     <div class="setting-title">
@@ -945,9 +923,7 @@
                     </div>
 
                 </div>
-
-                <!-- DATA -->
-
+                
                 <div class="setting-section">
 
                     <div class="setting-title">
@@ -979,8 +955,6 @@
                     </div>
 
                 </div>
-
-                <!-- ABOUT -->
 
                 <div class="setting-section">
 
@@ -1048,8 +1022,6 @@
 
         </div>
 
-        <!-- Navigation-->
-
         <footer>
 
             <div class="navContainer">
@@ -1115,7 +1087,6 @@
             document.getElementById("settingsView");
 
 
-        /* Data */
 
         let notes =
             JSON.parse(
@@ -1126,7 +1097,6 @@
         let currentDate = new Date();
 
 
-        /* VIEW CONTROL */
 
         function hideAll() {
 
@@ -1162,7 +1132,6 @@
         }
 
 
-        /* Calendar */
 
         function renderCalendar() {
 
@@ -1206,8 +1175,6 @@
             daysBox.innerHTML = "";
 
 
-            /* EMPTY CELLS */
-
             for (
                 let i = 0;
                 i < firstDay;
@@ -1218,8 +1185,6 @@
                     "<div></div>";
             }
 
-
-            /* DAYS */
 
             for (
                 let d = 1;
@@ -1234,7 +1199,6 @@
                 div.innerText = d;
 
 
-                /* TODAY */
 
                 if (
                     d === today.getDate() &&
@@ -1249,8 +1213,6 @@
                 daysBox.appendChild(div);
             }
 
-
-            /* TODAY SECTION */
 
             const todayDate =
                 new Date();
@@ -1303,8 +1265,6 @@
         }
 
 
-        /* Calculator */
-
         function showCalculator() {
 
             hideAll();
@@ -1356,7 +1316,6 @@
         }
 
 
-        /* Settings */
 
         function showSettings() {
 
@@ -1369,7 +1328,6 @@
         }
 
 
-        /* Plant Note*/
 
         function addNote() {
 
@@ -1407,8 +1365,6 @@
 
             renderNotes();
 
-
-            /* CLEAR INPUTS */
 
             document.getElementById(
                 "noteDate"
@@ -1476,8 +1432,6 @@
         }
 
 
-        /* Dark Mode */
-
         function toggleDark() {
 
             document.body.classList.toggle(
@@ -1490,8 +1444,6 @@
                 .classList.toggle("active");
         }
 
-
-        /* Profile */
 
         function editName() {
 
@@ -1559,8 +1511,6 @@
                 .innerText = plant;
         }
 
-
-        /* DATA */
 
         function clearAll() {
 
